@@ -123,6 +123,18 @@ def bias_beta(kwargs, tracer1, tracer2):
 
     return bias1, beta1, bias2, beta2
 
+def phi_am_custom(kwargs):
+    if kwargs['SB']:
+        phi = kwargs['phi_sb']
+        am = kwargs['am_sb']
+        ap = 2. * am / (1. + phi)
+        at = phi * ap
+    else:
+        ap = kwargs['ap']
+        at = kwargs['at']
+
+    return ap, at
+
 def ap_at(kwargs):
     if kwargs['SB']:
         ap = 1.
