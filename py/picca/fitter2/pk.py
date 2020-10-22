@@ -28,9 +28,22 @@ class pk:
 def pk_NL(k, pk_lin, tracer1, tracer2, **kwargs):
     kp = k*muk
     kt = k*np.sqrt(1-muk**2)
-    st2 = kwargs['sigmaNL_per']**2
-    sp2 = kwargs['sigmaNL_par']**2
-    return sp.exp(-(kp**2*sp2+kt**2*st2)/2)
+    
+    sp = None
+    st = None
+    if 'sigmaNL_par' in kwargs:
+        sp = kwargs['sigmaNL_par']
+    if 'sigmaNL_per' in kwargs:
+        st = kwargs['sigmaNL_per']
+
+    if st is None and sp is not None:
+        st = sp / (1 + kwargs['growth_rate'])
+    elif sp is None and st is not None:
+        sp = st / (1 + kwargs['growth_rate'])
+    else:
+        raise ValueError('No parameters for peak NL found. Add sigmaNL_par and/or sigmaNL_par.')
+
+    return sp.exp(-(kp**2 * sp**2 + kt**2 * st**2)/2)
 
 def pk_kaiser(k, pk_lin, tracer1, tracer2, **kwargs):
     bias1, beta1, bias2, beta2 = bias_beta(kwargs, tracer1, tracer2)
