@@ -379,14 +379,24 @@ class data:
         xi_peak = self.xi_model(k, pk_lin-pksb_lin, pars)
 
         pars['SB'] = True & (not full_shape)
-        sigmaNL_par = pars['sigmaNL_par']
-        sigmaNL_per = pars['sigmaNL_per']
-        pars['sigmaNL_par'] = 0.
-        pars['sigmaNL_per'] = 0.
+
+        sigmaNL_par = None
+        sigmaNL_per = None
+        if 'sigmaNL_par' in pars:
+            sigmaNL_par = pars['sigmaNL_par']
+            pars['sigmaNL_par'] = 0.
+        if 'sigmaNL_per' in pars:
+            sigmaNL_per = pars['sigmaNL_per']
+            pars['sigmaNL_per'] = 0.
+
         xi_sb = self.xi_model(k, pksb_lin, pars)
         pars['SB'] = False
-        pars['sigmaNL_par'] = sigmaNL_par
-        pars['sigmaNL_per'] = sigmaNL_per
+
+        if sigmaNL_par is not None:
+            pars['sigmaNL_par'] = sigmaNL_par
+        
+        if sigmaNL_per is not None:
+            pars['sigmaNL_per'] = sigmaNL_per
 
         xi_full = pars['bao_amp']*xi_peak + xi_sb
         dxi = self.da_cut-xi_full[self.mask]
