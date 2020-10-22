@@ -37,7 +37,7 @@ def pk_NL(k, pk_lin, tracer1, tracer2, **kwargs):
         sigma_per = kwargs['sigmaNL_per']
 
     if sigma_per is None and sigma_par is not None:
-        st = sigma_par / (1 + kwargs['growth_rate'])
+        sigma_per = sigma_par / (1 + kwargs['growth_rate'])
     elif sigma_par is None and sigma_per is not None:
         sigma_par = sigma_per * (1 + kwargs['growth_rate'])
     else:
