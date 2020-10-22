@@ -93,14 +93,20 @@ class fitter2:
             d.fiducial_model = fiducial_values['bao_amp']*d.xi_model(k, pk_lin-pksb_lin, fiducial_values)
 
             fiducial_values['SB'] = True
-            snl_per = fiducial_values['sigmaNL_per']
-            snl_par = fiducial_values['sigmaNL_par']
-            fiducial_values['sigmaNL_per'] = 0
-            fiducial_values['sigmaNL_par'] = 0
+            snl_par = None
+            snl_per = None
+            if 'sigmaNL_par' in self.fiducial_values:
+                snl_par = self.fiducial_values['sigmaNL_par']
+                self.fiducial_values['sigmaNL_par'] = 0.
+            if 'sigmaNL_per' in self.fiducial_values:
+                snl_per = self.fiducial_values['sigmaNL_per']
+                self.fiducial_values['sigmaNL_per'] = 0.
             d.fiducial_model += d.xi_model(k, pksb_lin, fiducial_values)
             fiducial_values['SB'] = False
-            fiducial_values['sigmaNL_per'] = snl_per
-            fiducial_values['sigmaNL_par'] = snl_par
+            if snl_per is not None:
+                self.fiducial_values['sigmaNL_per'] = snl_per
+            if snl_par is not None:
+                self.fiducial_values['sigmaNL_par'] = snl_par
         del fiducial_values['SB']
 
         for d in self.dic_init['data sets']['data']:
