@@ -122,14 +122,22 @@ class chi2:
             d.best_fit_model = values['bao_amp']*d.xi_model(self.k, self.pk_lin-self.pksb_lin, values)
 
             values['SB'] = True & (not self.full_shape)
-            sigmaNL_par = values['sigmaNL_par']
-            sigmaNL_per = values['sigmaNL_per']
-            values['sigmaNL_par'] = 0.
-            values['sigmaNL_per'] = 0.
+            sigmaNL_par = None
+            sigmaNL_per = None
+            if 'sigmaNL_par' in values:
+                sigmaNL_par = values['sigmaNL_par']
+                values['sigmaNL_par'] = 0.
+            if 'sigmaNL_per' in values:
+                sigmaNL_per = values['sigmaNL_per']
+                values['sigmaNL_per'] = 0.
             d.best_fit_model += d.xi_model(self.k, self.pksb_lin, values)
             values['SB'] = False
-            values['sigmaNL_par'] = sigmaNL_par
-            values['sigmaNL_per'] = sigmaNL_per
+            if sigmaNL_par is not None:
+                values['sigmaNL_par'] = sigmaNL_par
+            
+            if sigmaNL_per is not None:
+                values['sigmaNL_per'] = sigmaNL_per
+
 
     def chi2scan(self):
         if not hasattr(self, "dic_chi2scan"): return
@@ -241,14 +249,21 @@ class chi2:
             d.fiducial_model = self.fiducial_values['bao_amp']*d.xi_model(self.k, self.pk_lin-self.pksb_lin, self.fiducial_values)
 
             self.fiducial_values['SB'] = True
-            snl_per = self.fiducial_values['sigmaNL_per']
-            snl_par = self.fiducial_values['sigmaNL_par']
-            self.fiducial_values['sigmaNL_per'] = 0
-            self.fiducial_values['sigmaNL_par'] = 0
+
+            snl_par = None
+            snl_per = None
+            if 'sigmaNL_par' in self.fiducial_values:
+                snl_par = self.fiducial_values['sigmaNL_par']
+                self.fiducial_values['sigmaNL_par'] = 0.
+            if 'sigmaNL_per' in self.fiducial_values:
+                snl_per = self.fiducial_values['sigmaNL_per']
+                self.fiducial_values['sigmaNL_per'] = 0.
             d.fiducial_model += d.xi_model(self.k, self.pksb_lin, self.fiducial_values)
             self.fiducial_values['SB'] = False
-            self.fiducial_values['sigmaNL_per'] = snl_per
-            self.fiducial_values['sigmaNL_par'] = snl_par
+            if snl_per is not None:
+                self.fiducial_values['sigmaNL_per'] = snl_per
+            if snl_par is not None:
+                self.fiducial_values['sigmaNL_par'] = snl_par
         del self.fiducial_values['SB']
 
         self.fast_mc = {}
