@@ -39,7 +39,7 @@ def pk_NL(k, pk_lin, tracer1, tracer2, **kwargs):
     if st is None and sp is not None:
         st = sp / (1 + kwargs['growth_rate'])
     elif sp is None and st is not None:
-        sp = st / (1 + kwargs['growth_rate'])
+        sp = st * (1 + kwargs['growth_rate'])
     else:
         raise ValueError('No parameters for peak NL found. Add sigmaNL_par and/or sigmaNL_par.')
 
